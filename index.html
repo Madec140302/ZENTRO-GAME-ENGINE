@@ -1,45 +1,73 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ZENTRO — Game Engine</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
-        content="ZENTRO est une IA spécialisée dans la conception de jeux vidéo réalistes."
+        content="Zentro Game Engine — création de jeux assistée par IA"
     >
 
-    <link rel="stylesheet" href="style.css">
+    <title>ZENTRO GAME ENGINE</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <!-- Moteur 3D -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.min.js"
+    ></script>
 </head>
 
 <body>
 
     <!-- =====================================================
-         ÉCRAN DE DÉMARRAGE
-    ====================================================== -->
+         BOOT SCREEN
+         ===================================================== -->
 
-    <div id="bootScreen" class="boot-screen">
+    <div
+        id="bootScreen"
+        class="boot-screen"
+    >
 
-        <div class="boot-logo">
-            Z
-        </div>
+        <div class="boot-content">
 
-        <div class="boot-title">
-            ZENTRO
-        </div>
+            <div class="boot-logo">
+                Z
+            </div>
 
-        <div class="boot-subtitle">
-            GAME ENGINE
-        </div>
+            <h1 class="boot-title">
+                ZENTRO
+            </h1>
 
-        <div class="boot-loader">
-            <div id="bootProgress"></div>
-        </div>
+            <p class="boot-subtitle">
+                GAME ENGINE
+            </p>
 
-        <div id="bootMessage" class="boot-message">
-            Initialisation de Zentro...
+            <div class="boot-loader">
+
+                <div
+                    id="bootProgress"
+                    class="boot-progress"
+                ></div>
+
+            </div>
+
+            <p
+                id="bootMessage"
+                class="boot-message"
+            >
+                Initialisation de Zentro AI OS...
+            </p>
+
         </div>
 
     </div>
@@ -47,13 +75,16 @@
 
     <!-- =====================================================
          APPLICATION
-    ====================================================== -->
+         ===================================================== -->
 
-    <div id="app" class="app hidden">
+    <div
+        id="app"
+        class="app"
+    >
 
         <!-- =================================================
-             BARRE SUPÉRIEURE
-        ================================================== -->
+             TOPBAR
+             ================================================= -->
 
         <header class="topbar">
 
@@ -63,12 +94,16 @@
                     Z
                 </div>
 
-                <div class="brand-name">
-                    ZENTRO
-                </div>
+                <div>
 
-                <div class="brand-product">
-                    GAME ENGINE
+                    <div class="brand-name">
+                        ZENTRO
+                    </div>
+
+                    <div class="brand-product">
+                        GAME ENGINE
+                    </div>
+
                 </div>
 
             </div>
@@ -78,7 +113,9 @@
 
                 <span class="status-light"></span>
 
-                SYSTEM ONLINE
+                <span>
+                    SYSTEM ONLINE
+                </span>
 
             </div>
 
@@ -87,7 +124,7 @@
                 id="newProjectButton"
                 class="top-button"
             >
-                ＋ Nouveau projet
+                + Nouveau projet
             </button>
 
         </header>
@@ -95,7 +132,7 @@
 
         <!-- =================================================
              SIDEBAR
-        ================================================== -->
+             ================================================= -->
 
         <aside class="sidebar">
 
@@ -105,8 +142,31 @@
                     class="nav-button active"
                     data-page="create"
                 >
-                    <span class="nav-icon">🚀</span>
-                    <span class="nav-text">Créer un jeu</span>
+
+                    <span class="nav-icon">
+                        ✨
+                    </span>
+
+                    <span class="nav-text">
+                        Créer un jeu
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="nav-button"
+                    data-page="preview"
+                >
+
+                    <span class="nav-icon">
+                        🎮
+                    </span>
+
+                    <span class="nav-text">
+                        Game Preview
+                    </span>
+
                 </button>
 
 
@@ -114,8 +174,15 @@
                     class="nav-button"
                     data-page="projects"
                 >
-                    <span class="nav-icon">📁</span>
-                    <span class="nav-text">Mes projets</span>
+
+                    <span class="nav-icon">
+                        📁
+                    </span>
+
+                    <span class="nav-text">
+                        Mes projets
+                    </span>
+
                 </button>
 
 
@@ -123,8 +190,15 @@
                     class="nav-button"
                     data-page="agents"
                 >
-                    <span class="nav-icon">🧠</span>
-                    <span class="nav-text">Agents IA</span>
+
+                    <span class="nav-icon">
+                        🤖
+                    </span>
+
+                    <span class="nav-text">
+                        Agents IA
+                    </span>
+
                 </button>
 
 
@@ -132,8 +206,15 @@
                     class="nav-button"
                     data-page="realism"
                 >
-                    <span class="nav-icon">🎬</span>
-                    <span class="nav-text">Realism Engine</span>
+
+                    <span class="nav-icon">
+                        🌍
+                    </span>
+
+                    <span class="nav-text">
+                        Realism Engine
+                    </span>
+
                 </button>
 
 
@@ -141,8 +222,15 @@
                     class="nav-button"
                     data-page="settings"
                 >
-                    <span class="nav-icon">⚙️</span>
-                    <span class="nav-text">Paramètres</span>
+
+                    <span class="nav-icon">
+                        ⚙️
+                    </span>
+
+                    <span class="nav-text">
+                        Paramètres
+                    </span>
+
                 </button>
 
             </nav>
@@ -152,17 +240,17 @@
 
                 <div class="mode-card">
 
-                    <div class="mode-label">
-                        MODE ACTUEL
-                    </div>
+                    <span class="mode-label">
+                        MODE
+                    </span>
 
-                    <div class="mode-value">
-                        AAA / CINEMATIC
-                    </div>
+                    <strong class="mode-value">
+                        GAME ENGINE V3
+                    </strong>
 
-                    <div class="mode-status">
-                        ● PRÊT
-                    </div>
+                    <span class="mode-status">
+                        ● Prototype 3D
+                    </span>
 
                 </div>
 
@@ -173,14 +261,14 @@
 
         <!-- =================================================
              CONTENU PRINCIPAL
-        ================================================== -->
+             ================================================= -->
 
         <main class="main-content">
 
 
             <!-- =================================================
-                 PAGE : CRÉER UN JEU
-            ================================================== -->
+                 PAGE : CRÉER
+                 ================================================= -->
 
             <section
                 id="page-create"
@@ -191,20 +279,20 @@
 
                     <div class="hero-content">
 
-                        <div class="eyebrow">
-                            AUTONOMOUS GAME CREATION
-                        </div>
+                        <span class="eyebrow">
+                            ZENTRO GAME ENGINE V3
+                        </span>
 
                         <h1>
-                            Transforme ton idée
+                            Transforme une idée
                             <br>
-                            en <span>jeu vidéo.</span>
+                            en monde jouable.
                         </h1>
 
                         <p>
-                            Décris simplement le jeu que tu imagines.
-                            Zentro analyse ta vision, construit les systèmes,
-                            prépare le monde et vérifie le projet avant sa génération.
+                            Décris ton jeu. Zentro analyse ta vision,
+                            prépare les systèmes nécessaires et construit
+                            progressivement ton expérience.
                         </p>
 
                     </div>
@@ -221,295 +309,277 @@
                 </div>
 
 
-                <!-- =================================================
-                     ZONE DE CRÉATION
-                ================================================== -->
+                <!-- PROMPT -->
 
-                <div class="creation-grid">
+                <div class="panel">
 
+                    <div class="panel-header">
 
-                    <!-- =================================================
-                         PROMPT
-                    ================================================== -->
+                        <div>
 
-                    <div class="panel prompt-panel">
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <h2>
-                                    🎮 Décris ton jeu
-                                </h2>
-
-                                <p>
-                                    Donne à Zentro le plus de détails possible.
-                                </p>
-
-                            </div>
-
-                            <span class="badge">
-                                AI DIRECTOR
+                            <span class="eyebrow">
+                                GAME DIRECTOR
                             </span>
 
-                        </div>
-
-
-                        <textarea
-                            id="gamePrompt"
-                            class="game-prompt"
-                            placeholder="Exemple : crée un immense jeu de monde ouvert extrêmement réaliste, avec une grande ville moderne, des quartiers résidentiels, des campagnes, des autoroutes, des voitures réalistes, du trafic, des PNJ, une météo dynamique, un cycle jour/nuit, des garages, des missions et une physique réaliste..."
-                        ></textarea>
-
-
-                        <!-- =================================================
-                             RACCOURCIS
-                        ================================================== -->
-
-                        <div class="quick-actions">
-
-                            <button
-                                class="quick-button"
-                                data-fill="openworld"
-                            >
-                                🌍 Monde ouvert
-                            </button>
-
-                            <button
-                                class="quick-button"
-                                data-fill="driving"
-                            >
-                                🚗 Conduite réaliste
-                            </button>
-
-                            <button
-                                class="quick-button"
-                                data-fill="npc"
-                            >
-                                👤 PNJ avancés
-                            </button>
-
-                            <button
-                                class="quick-button"
-                                data-fill="weather"
-                            >
-                                🌦️ Météo dynamique
-                            </button>
+                            <h2>
+                                Décris ton jeu
+                            </h2>
 
                         </div>
 
+                        <span class="badge">
+                            IA
+                        </span>
 
-                        <!-- =================================================
-                             OPTIONS
-                        ================================================== -->
+                    </div>
+
+
+                    <textarea
+                        id="gamePrompt"
+                        class="game-prompt"
+                        placeholder="Exemple : crée un monde ouvert 3D réaliste avec une grande ville, une campagne, des autoroutes, des voitures, des PNJ, du trafic dynamique, une météo évolutive, un cycle jour/nuit et un système de missions..."
+                    ></textarea>
+
+
+                    <div class="quick-actions">
+
+                        <button
+                            class="quick-button"
+                            data-fill="openworld"
+                        >
+                            🌍 Monde ouvert
+                        </button>
+
+                        <button
+                            class="quick-button"
+                            data-fill="driving"
+                        >
+                            🚗 Conduite
+                        </button>
+
+                        <button
+                            class="quick-button"
+                            data-fill="npc"
+                        >
+                            👤 PNJ
+                        </button>
+
+                        <button
+                            class="quick-button"
+                            data-fill="weather"
+                        >
+                            🌦️ Météo
+                        </button>
+
+                    </div>
+
+
+                    <div class="creation-grid">
+
 
                         <div class="creation-options">
 
+                            <label class="option">
 
-                            <div class="option">
-
-                                <label for="platform">
+                                <span>
                                     Plateforme
-                                </label>
+                                </span>
 
                                 <select id="platform">
 
-                                    <option>
+                                    <option value="PC">
                                         PC
                                     </option>
 
-                                    <option>
-                                        PC + Console
+                                    <option value="Web">
+                                        Web
                                     </option>
 
-                                    <option>
-                                        Web
+                                    <option value="Mobile">
+                                        Mobile
                                     </option>
 
                                 </select>
 
-                            </div>
+                            </label>
 
 
-                            <div class="option">
+                            <label class="option">
 
-                                <label for="dimension">
+                                <span>
                                     Dimension
-                                </label>
+                                </span>
 
                                 <select id="dimension">
 
-                                    <option>
+                                    <option value="3D">
                                         3D
                                     </option>
 
-                                    <option>
+                                    <option value="2D">
                                         2D
                                     </option>
 
                                 </select>
 
-                            </div>
+                            </label>
 
 
-                            <div class="option">
+                            <label class="option">
 
-                                <label for="priority">
+                                <span>
                                     Priorité
-                                </label>
+                                </span>
 
                                 <select id="priority">
 
-                                    <option>
-                                        Réalisme maximal
+                                    <option value="Réalisme">
+                                        Réalisme
                                     </option>
 
-                                    <option>
+                                    <option value="Gameplay">
                                         Gameplay
                                     </option>
 
-                                    <option>
+                                    <option value="Performance">
                                         Performance
+                                    </option>
+
+                                    <option value="Créativité">
+                                        Créativité
                                     </option>
 
                                 </select>
 
-                            </div>
+                            </label>
 
                         </div>
 
-
-                        <!-- =================================================
-                             RÉALISME
-                        ================================================== -->
 
                         <div class="realism-control">
 
                             <div class="realism-header">
 
                                 <span>
-                                    🎬 Niveau de réalisme
+                                    REALISM ENGINE
                                 </span>
 
                                 <strong id="realismValue">
-                                    100%
+                                    90%
                                 </strong>
 
                             </div>
+
 
                             <input
                                 id="realism"
                                 type="range"
                                 min="40"
                                 max="100"
-                                value="100"
+                                value="90"
                             >
 
+                            <p>
+                                Influence la qualité visuelle,
+                                la physique, les PNJ,
+                                l'environnement et les détails.
+                            </p>
+
                         </div>
-
-
-                        <!-- =================================================
-                             BOUTON ANALYSE
-                        ================================================== -->
-
-                        <button
-                            id="analyzeButton"
-                            class="main-action"
-                        >
-
-                            <span>
-                                ✨
-                            </span>
-
-                            Analyser mon idée
-
-                        </button>
 
                     </div>
 
 
-                    <!-- =================================================
-                         COMPRÉHENSION
-                    ================================================== -->
+                    <button
+                        id="analyzeButton"
+                        class="main-action"
+                    >
 
-                    <div class="panel understanding-panel">
+                        <span>
+                            🧠
+                        </span>
 
-                        <div class="panel-header">
+                        Analyser mon idée
 
-                            <div>
+                    </button>
 
-                                <h2>
-                                    🧠 Compréhension Zentro
-                                </h2>
+                </div>
 
-                                <p>
-                                    Validation avant la génération.
-                                </p>
 
-                            </div>
+                <!-- COMPRÉHENSION -->
 
-                            <span
-                                id="understandingStatus"
-                                class="badge neutral"
-                            >
-                                EN ATTENTE
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                ZENTRO DIRECTOR
                             </span>
 
+                            <h2>
+                                Compréhension de ta vision
+                            </h2>
+
                         </div>
 
-
-                        <div
-                            id="understandingContent"
-                            class="empty-content"
+                        <span
+                            id="understandingStatus"
+                            class="badge"
                         >
+                            En attente
+                        </span>
 
-                            <div class="empty-icon">
-                                🧠
-                            </div>
+                    </div>
 
-                            <h3>
-                                Zentro attend ta vision
-                            </h3>
 
-                            <p>
-                                Décris ton jeu puis lance l'analyse.
-                                Zentro construira une fiche de conception
-                                avant de commencer la génération.
-                            </p>
+                    <div
+                        id="understandingContent"
+                        class="empty-content"
+                    >
 
+                        <div class="empty-icon">
+                            🧠
                         </div>
+
+                        <h3>
+                            En attente de ton idée
+                        </h3>
+
+                        <p>
+                            Zentro analysera ton concept
+                            avant toute génération.
+                        </p>
 
                     </div>
 
                 </div>
 
 
-                <!-- =================================================
-                     VALIDATION DU PROJET
-                ================================================== -->
+                <!-- VALIDATION -->
 
                 <div
                     id="approvalPanel"
-                    class="panel approval-panel hidden"
+                    class="approval-panel"
                 >
 
                     <div class="panel-header">
 
                         <div>
 
-                            <h2>
-                                🎯 Validation du projet
-                            </h2>
+                            <span class="eyebrow">
+                                VALIDATION
+                            </span>
 
-                            <p>
-                                Tu restes le directeur créatif.
-                                Vérifie la vision avant de lancer la construction.
-                            </p>
+                            <h2>
+                                Voici ce que Zentro va construire
+                            </h2>
 
                         </div>
 
-                        <span class="badge warning">
-                            REVIEW REQUIRED
+                        <span class="badge">
+                            ÉTAPE 2
                         </span>
 
                     </div>
@@ -517,9 +587,7 @@
 
                     <div
                         id="projectSpecification"
-                        class="specification-grid"
-                    >
-                    </div>
+                    ></div>
 
 
                     <div class="approval-actions">
@@ -531,11 +599,12 @@
                             ✏️ Modifier mon idée
                         </button>
 
+
                         <button
                             id="generateButton"
                             class="main-action"
                         >
-                            🚀 Générer le projet
+                            🚀 Générer le jeu
                         </button>
 
                     </div>
@@ -543,26 +612,24 @@
                 </div>
 
 
-                <!-- =================================================
-                     CONSTRUCTION AUTONOME
-                ================================================== -->
+                <!-- GÉNÉRATION -->
 
                 <div
                     id="generationPanel"
-                    class="panel generation-panel hidden"
+                    class="approval-panel"
                 >
 
                     <div class="panel-header">
 
                         <div>
 
-                            <h2>
-                                ⚡ Construction autonome
-                            </h2>
+                            <span class="eyebrow">
+                                AUTONOMOUS BUILD
+                            </span>
 
-                            <p>
-                                Les agents Zentro travaillent sur ton projet.
-                            </p>
+                            <h2>
+                                Construction du jeu
+                            </h2>
 
                         </div>
 
@@ -570,7 +637,7 @@
                             id="buildStatus"
                             class="badge"
                         >
-                            BUILDING
+                            EN ATTENTE
                         </span>
 
                     </div>
@@ -579,8 +646,7 @@
                     <div
                         id="agentPipeline"
                         class="agent-pipeline"
-                    >
-                    </div>
+                    ></div>
 
 
                     <div class="build-progress">
@@ -596,7 +662,300 @@
                     <div
                         id="buildLog"
                         class="build-log"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PAGE : GAME PREVIEW
+                 ================================================= -->
+
+            <section
+                id="page-preview"
+                class="page"
+            >
+
+                <div class="page-heading">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            ZENTRO RUNTIME
+                        </span>
+
+                        <h1>
+                            Game Preview
+                        </h1>
+
+                        <p>
+                            Prévisualise ton monde 3D directement
+                            dans Zentro.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="game-preview-panel">
+
+                    <div class="game-preview-header">
+
+                        <div>
+
+                            <strong>
+                                ZENTRO 3D RUNTIME
+                            </strong>
+
+                            <span id="gameRuntimeStatus">
+                                ● READY
+                            </span>
+
+                        </div>
+
+
+                        <div class="game-preview-actions">
+
+                            <button
+                                id="launchGameButton"
+                                class="preview-button"
+                            >
+                                ▶ Lancer
+                            </button>
+
+                            <button
+                                id="resetGameButton"
+                                class="preview-button"
+                            >
+                                ↻ Reset
+                            </button>
+
+                            <button
+                                id="fullscreenGameButton"
+                                class="preview-button"
+                            >
+                                ⛶
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="gameViewport"
+                        class="game-viewport"
                     >
+
+                        <canvas
+                            id="gameCanvas"
+                        ></canvas>
+
+
+                        <div
+                            id="gameLoading"
+                            class="game-loading"
+                        >
+
+                            <div class="game-loading-logo">
+                                Z
+                            </div>
+
+                            <strong>
+                                ZENTRO 3D
+                            </strong>
+
+                            <span>
+                                Initialisation du monde...
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            id="gameHUD"
+                            class="game-hud"
+                        >
+
+                            <div class="hud-top">
+
+                                <div class="hud-title">
+                                    ZENTRO
+                                </div>
+
+                                <div
+                                    id="hudFPS"
+                                    class="hud-fps"
+                                >
+                                    60 FPS
+                                </div>
+
+                            </div>
+
+
+                            <div class="hud-bottom">
+
+                                <div class="hud-controls">
+
+                                    <strong>
+                                        CONTRÔLES
+                                    </strong>
+
+                                    <span>
+                                        ZQSD / WASD — Déplacement
+                                    </span>
+
+                                    <span>
+                                        Souris — Caméra
+                                    </span>
+
+                                    <span>
+                                        Espace — Action
+                                    </span>
+
+                                </div>
+
+
+                                <div class="hud-world">
+
+                                    <span>
+                                        🌤️
+                                    </span>
+
+                                    <span>
+                                        JOUR
+                                    </span>
+
+                                    <span>
+                                        12:00
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="game-preview-footer">
+
+                        <span>
+                            🎮 Prototype Runtime
+                        </span>
+
+                        <span>
+                            🌍 Monde 3D
+                        </span>
+
+                        <span>
+                            ⚙️ Physics
+                        </span>
+
+                        <span>
+                            🤖 AI Ready
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- INFORMATIONS -->
+
+                <div class="preview-info-grid">
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    WORLD
+                                </span>
+
+                                <h2>
+                                    Monde
+                                </h2>
+
+                            </div>
+
+                            <span>
+                                🌍
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Le moteur 3D pourra recevoir les
+                            environnements générés par Zentro.
+                        </p>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    PHYSICS
+                                </span>
+
+                                <h2>
+                                    Physique
+                                </h2>
+
+                            </div>
+
+                            <span>
+                                ⚙️
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Les véhicules et objets pourront
+                            utiliser leur propre système physique.
+                        </p>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    AI
+                                </span>
+
+                                <h2>
+                                    Intelligence
+                                </h2>
+
+                            </div>
+
+                            <span>
+                                🤖
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Les agents Zentro pourront ensuite
+                            contrôler les systèmes du jeu.
+                        </p>
+
                     </div>
 
                 </div>
@@ -606,7 +965,7 @@
 
             <!-- =================================================
                  PAGE : PROJETS
-            ================================================== -->
+                 ================================================= -->
 
             <section
                 id="page-projects"
@@ -615,16 +974,16 @@
 
                 <div class="page-heading">
 
-                    <div class="eyebrow">
+                    <span class="eyebrow">
                         WORKSPACE
-                    </div>
+                    </span>
 
                     <h1>
                         Mes projets
                     </h1>
 
                     <p>
-                        Retrouve les projets préparés par Zentro.
+                        Retrouvez les jeux créés avec Zentro.
                     </p>
 
                 </div>
@@ -633,15 +992,14 @@
                 <div
                     id="projectsList"
                     class="projects-list"
-                >
-                </div>
+                ></div>
 
             </section>
 
 
             <!-- =================================================
                  PAGE : AGENTS
-            ================================================== -->
+                 ================================================= -->
 
             <section
                 id="page-agents"
@@ -650,16 +1008,17 @@
 
                 <div class="page-heading">
 
-                    <div class="eyebrow">
+                    <span class="eyebrow">
                         MULTI-AGENT SYSTEM
-                    </div>
+                    </span>
 
                     <h1>
                         Agents IA
                     </h1>
 
                     <p>
-                        Une équipe d'agents spécialisés pour construire le jeu.
+                        Les différents agents qui composent
+                        le Zentro Game Engine.
                     </p>
 
                 </div>
@@ -668,15 +1027,14 @@
                 <div
                     id="agentCards"
                     class="agent-cards"
-                >
-                </div>
+                ></div>
 
             </section>
 
 
             <!-- =================================================
-                 PAGE : REALISM ENGINE
-            ================================================== -->
+                 PAGE : REALISM
+                 ================================================= -->
 
             <section
                 id="page-realism"
@@ -685,17 +1043,17 @@
 
                 <div class="page-heading">
 
-                    <div class="eyebrow">
+                    <span class="eyebrow">
                         REALISM ENGINE
-                    </div>
+                    </span>
 
                     <h1>
-                        Réalisme
+                        Realism Engine
                     </h1>
 
                     <p>
-                        Zentro cherche à rendre chaque système aussi crédible
-                        et immersif que possible.
+                        Contrôle des systèmes nécessaires
+                        pour créer des mondes plus crédibles.
                     </p>
 
                 </div>
@@ -704,15 +1062,14 @@
                 <div
                     id="realismDashboard"
                     class="realism-dashboard"
-                >
-                </div>
+                ></div>
 
             </section>
 
 
             <!-- =================================================
                  PAGE : PARAMÈTRES
-            ================================================== -->
+                 ================================================= -->
 
             <section
                 id="page-settings"
@@ -721,36 +1078,34 @@
 
                 <div class="page-heading">
 
-                    <div class="eyebrow">
+                    <span class="eyebrow">
                         SYSTEM
-                    </div>
+                    </span>
 
                     <h1>
                         Paramètres
                     </h1>
 
                     <p>
-                        Configure le comportement de Zentro.
+                        Configuration du moteur Zentro.
                     </p>
 
                 </div>
 
 
-                <div class="panel settings-panel">
-
+                <div class="settings-panel">
 
                     <div class="setting-row">
 
                         <div>
 
                             <strong>
-                                Validation avant génération
+                                Realism Engine
                             </strong>
 
-                            <span>
-                                Zentro doit présenter sa compréhension
-                                avant de construire le jeu.
-                            </span>
+                            <p>
+                                Activer les systèmes de réalisme.
+                            </p>
 
                         </div>
 
@@ -767,13 +1122,12 @@
                         <div>
 
                             <strong>
-                                Tests automatiques
+                                Auto QA
                             </strong>
 
-                            <span>
-                                Tester, détecter les problèmes,
-                                corriger puis tester à nouveau.
-                            </span>
+                            <p>
+                                Tester automatiquement les projets.
+                            </p>
 
                         </div>
 
@@ -790,13 +1144,12 @@
                         <div>
 
                             <strong>
-                                Protection d'originalité
+                                Auto Fix
                             </strong>
 
-                            <span>
-                                Éviter la reproduction directe d'une
-                                œuvre existante.
-                            </span>
+                            <p>
+                                Autoriser les corrections automatiques.
+                            </p>
 
                         </div>
 
@@ -813,13 +1166,12 @@
                         <div>
 
                             <strong>
-                                Mode réalisme maximal
+                                Game Preview
                             </strong>
 
-                            <span>
-                                Donner la priorité aux systèmes,
-                                détails et effets réalistes.
-                            </span>
+                            <p>
+                                Activer le runtime 3D expérimental.
+                            </p>
 
                         </div>
 
@@ -840,10 +1192,11 @@
 
 
     <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
+         SCRIPT PRINCIPAL
+         ===================================================== -->
 
     <script src="main.js"></script>
 
 </body>
+
 </html>
