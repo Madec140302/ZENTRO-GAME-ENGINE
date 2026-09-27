@@ -1,12 +1,12 @@
 /* =========================================================
-   ZENTRO AI OS — GAME ENGINE V2
-   Frontend prototype
+   ZENTRO GAME ENGINE V3
+   AI Game Creator + 3D Game Preview
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
     // =====================================================
-    // VARIABLES
+    // CONFIG
     // =====================================================
 
     const STORAGE_KEY = "zentroProjects";
@@ -26,19 +26,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const navButtons = document.querySelectorAll(".nav-button");
     const pages = document.querySelectorAll(".page");
 
-    const newProjectButton = document.getElementById("newProjectButton");
+    const newProjectButton =
+        document.getElementById("newProjectButton");
 
-    const gamePrompt = document.getElementById("gamePrompt");
-    const quickButtons = document.querySelectorAll(".quick-button");
+    const gamePrompt =
+        document.getElementById("gamePrompt");
 
-    const platform = document.getElementById("platform");
-    const dimension = document.getElementById("dimension");
-    const priority = document.getElementById("priority");
+    const quickButtons =
+        document.querySelectorAll(".quick-button");
 
-    const realism = document.getElementById("realism");
-    const realismValue = document.getElementById("realismValue");
+    const platform =
+        document.getElementById("platform");
 
-    const analyzeButton = document.getElementById("analyzeButton");
+    const dimension =
+        document.getElementById("dimension");
+
+    const priority =
+        document.getElementById("priority");
+
+    const realism =
+        document.getElementById("realism");
+
+    const realismValue =
+        document.getElementById("realismValue");
+
+    const analyzeButton =
+        document.getElementById("analyzeButton");
 
     const understandingStatus =
         document.getElementById("understandingStatus");
@@ -81,6 +94,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const realismDashboard =
         document.getElementById("realismDashboard");
+
+    // =====================================================
+    // GAME PREVIEW DOM
+    // =====================================================
+
+    const gameViewport =
+        document.getElementById("gameViewport");
+
+    const gameCanvas =
+        document.getElementById("gameCanvas");
+
+    const gameLoading =
+        document.getElementById("gameLoading");
+
+    const gameHUD =
+        document.getElementById("gameHUD");
+
+    const launchGameButton =
+        document.getElementById("launchGameButton");
+
+    const resetGameButton =
+        document.getElementById("resetGameButton");
+
+    const fullscreenGameButton =
+        document.getElementById("fullscreenGameButton");
+
+    const gameRuntimeStatus =
+        document.getElementById("gameRuntimeStatus");
+
+    const hudFPS =
+        document.getElementById("hudFPS");
 
 
     // =====================================================
@@ -125,25 +169,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!buildLog) return;
 
-        const line = document.createElement("div");
+        const line =
+            document.createElement("div");
 
-        line.className = `log-line ${type}`;
+        line.className =
+            `log-line ${type}`;
 
-        const time = new Date().toLocaleTimeString(
-            "fr-FR",
-            {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit"
-            }
-        );
+        const time =
+            new Date().toLocaleTimeString(
+                "fr-FR",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit"
+                }
+            );
 
         line.innerHTML =
             `<span class="log-time">[${time}]</span> ${escapeHTML(message)}`;
 
         buildLog.appendChild(line);
 
-        buildLog.scrollTop = buildLog.scrollHeight;
+        buildLog.scrollTop =
+            buildLog.scrollHeight;
     }
 
 
@@ -153,37 +201,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function bootSequence() {
 
-        if (!bootScreen || !app) return;
+        if (!bootScreen || !app) {
+            return;
+        }
 
         const messages = [
             "Initialisation de Zentro AI OS...",
             "Chargement du Game Engine...",
             "Initialisation des agents IA...",
             "Chargement du Realism Engine...",
+            "Initialisation du runtime 3D...",
             "Vérification des systèmes...",
-            "Préparation de l'environnement...",
             "Zentro est prêt."
         ];
 
-        for (let i = 0; i <= 100; i += 4) {
+        for (
+            let i = 0;
+            i <= 100;
+            i += 4
+        ) {
 
             if (bootProgress) {
-                bootProgress.style.width = `${i}%`;
+                bootProgress.style.width =
+                    `${i}%`;
             }
 
-            const index = Math.min(
-                messages.length - 1,
-                Math.floor(i / 16)
-            );
+            const index =
+                Math.min(
+                    messages.length - 1,
+                    Math.floor(i / 16)
+                );
 
             if (bootMessage) {
-                bootMessage.textContent = messages[index];
+                bootMessage.textContent =
+                    messages[index];
             }
 
-            await sleep(45);
+            await sleep(35);
         }
 
-        await sleep(350);
+        await sleep(300);
 
         bootScreen.classList.add("hidden");
         app.classList.add("visible");
@@ -205,7 +262,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const target =
-            document.getElementById(`page-${pageName}`);
+            document.getElementById(
+                `page-${pageName}`
+            );
 
         const button =
             document.querySelector(
@@ -219,21 +278,32 @@ document.addEventListener("DOMContentLoaded", () => {
         if (button) {
             button.classList.add("active");
         }
+
+        if (
+            pageName === "preview" &&
+            typeof init3DGame === "function"
+        ) {
+            setTimeout(() => {
+                init3DGame();
+            }, 100);
+        }
     }
 
 
     navButtons.forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            const page =
-                button.dataset.page;
+                const page =
+                    button.dataset.page;
 
-            if (page) {
-                showPage(page);
+                if (page) {
+                    showPage(page);
+                }
             }
-
-        });
+        );
 
     });
 
@@ -244,17 +314,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (newProjectButton) {
 
-        newProjectButton.addEventListener("click", () => {
+        newProjectButton.addEventListener(
+            "click",
+            () => {
 
-            showPage("create");
+                showPage("create");
 
-            setTimeout(() => {
-                if (gamePrompt) {
-                    gamePrompt.focus();
-                }
-            }, 100);
+                setTimeout(() => {
 
-        });
+                    if (gamePrompt) {
+                        gamePrompt.focus();
+                    }
+
+                }, 100);
+
+            }
+        );
 
     }
 
@@ -281,26 +356,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     quickButtons.forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            const key = button.dataset.fill;
+                const key =
+                    button.dataset.fill;
 
-            if (!gamePrompt || !quickTexts[key]) {
-                return;
+                if (
+                    !gamePrompt ||
+                    !quickTexts[key]
+                ) {
+                    return;
+                }
+
+                if (gamePrompt.value.trim()) {
+
+                    gamePrompt.value +=
+                        "\n\n" +
+                        quickTexts[key];
+
+                } else {
+
+                    gamePrompt.value =
+                        quickTexts[key];
+
+                }
+
+                gamePrompt.focus();
+
             }
-
-            const text = quickTexts[key];
-
-            if (gamePrompt.value.trim()) {
-                gamePrompt.value +=
-                    "\n\n" + text;
-            } else {
-                gamePrompt.value = text;
-            }
-
-            gamePrompt.focus();
-
-        });
+        );
 
     });
 
@@ -311,35 +397,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (realism && realismValue) {
 
-        realism.addEventListener("input", () => {
+        realism.addEventListener(
+            "input",
+            () => {
 
-            realismValue.textContent =
-                `${realism.value}%`;
+                realismValue.textContent =
+                    `${realism.value}%`;
 
-        });
+            }
+        );
 
     }
 
 
     // =====================================================
-    // DETECTION DES SYSTEMES
+    // DÉTECTION DES SYSTÈMES
     // =====================================================
 
     function detectSystems(prompt) {
 
-        const text = prompt.toLowerCase();
+        const text =
+            prompt.toLowerCase();
 
         const systems = [];
 
         const rules = [
 
             {
-                names: ["Monde ouvert", "World Builder"],
+                names: [
+                    "Monde ouvert",
+                    "World Builder"
+                ],
                 keywords: [
                     "monde ouvert",
                     "open world",
                     "ville",
-                    "ville ouverte",
                     "map",
                     "quartier",
                     "campagne"
@@ -347,7 +439,10 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["Conduite & véhicules", "Vehicle AI"],
+                names: [
+                    "Conduite & véhicules",
+                    "Vehicle AI"
+                ],
                 keywords: [
                     "voiture",
                     "voitures",
@@ -361,7 +456,10 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["PNJ intelligents", "NPC AI"],
+                names: [
+                    "PNJ intelligents",
+                    "NPC AI"
+                ],
                 keywords: [
                     "pnj",
                     "npc",
@@ -373,7 +471,10 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["Météo & environnement", "Weather"],
+                names: [
+                    "Météo & environnement",
+                    "Weather"
+                ],
                 keywords: [
                     "météo",
                     "pluie",
@@ -387,13 +488,15 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["Missions & gameplay", "Gameplay"],
+                names: [
+                    "Missions & gameplay",
+                    "Gameplay"
+                ],
                 keywords: [
                     "mission",
                     "missions",
                     "objectif",
                     "livraison",
-                    "course",
                     "garage",
                     "argent",
                     "économie"
@@ -401,12 +504,14 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["Personnalisation", "Customization"],
+                names: [
+                    "Personnalisation",
+                    "Customization"
+                ],
                 keywords: [
                     "tuning",
                     "personnalisation",
                     "customisation",
-                    "modifier",
                     "jantes",
                     "moteur",
                     "carrosserie"
@@ -414,7 +519,10 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["Graphismes réalistes", "Visuals"],
+                names: [
+                    "Graphismes réalistes",
+                    "Visuals"
+                ],
                 keywords: [
                     "réaliste",
                     "réalisme",
@@ -427,7 +535,10 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             {
-                names: ["Audio immersif", "Audio"],
+                names: [
+                    "Audio immersif",
+                    "Audio"
+                ],
                 keywords: [
                     "son",
                     "sons",
@@ -437,14 +548,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     "échappement"
                 ]
             }
+
         ];
 
 
         rules.forEach(rule => {
 
             const found =
-                rule.keywords.some(keyword =>
-                    text.includes(keyword)
+                rule.keywords.some(
+                    keyword =>
+                        text.includes(keyword)
                 );
 
             if (found) {
@@ -457,25 +570,34 @@ document.addEventListener("DOMContentLoaded", () => {
         if (systems.length === 0) {
 
             systems.push(
-                ["Gameplay général", "Core Gameplay"],
-                ["Monde", "World Builder"],
-                ["Interface", "UI"]
+                [
+                    "Gameplay général",
+                    "Core Gameplay"
+                ],
+                [
+                    "Monde",
+                    "World Builder"
+                ],
+                [
+                    "Interface",
+                    "UI"
+                ]
             );
 
         }
-
 
         return systems;
     }
 
 
     // =====================================================
-    // TITRE AUTOMATIQUE
+    // TITRE
     // =====================================================
 
     function generateTitle(prompt) {
 
-        const text = prompt.toLowerCase();
+        const text =
+            prompt.toLowerCase();
 
         if (
             text.includes("voiture") ||
@@ -493,15 +615,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (
-            text.includes("horreur") ||
-            text.includes("horror")
-        ) {
-            return "Zentro Dark";
-        }
-
-        if (
-            text.includes("space") ||
-            text.includes("espace")
+            text.includes("espace") ||
+            text.includes("space")
         ) {
             return "Zentro Galaxy";
         }
@@ -511,32 +626,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =====================================================
-    // ANALYSE DE L'IDÉE
+    // ANALYSE
     // =====================================================
 
     function analyzePrompt() {
 
-        if (!gamePrompt) return;
+        if (!gamePrompt) {
+            return;
+        }
 
         const prompt =
             gamePrompt.value.trim();
 
         if (!prompt) {
 
-            understandingStatus.textContent =
-                "Écrivez votre idée";
+            if (understandingStatus) {
+                understandingStatus.textContent =
+                    "Écrivez votre idée";
+            }
 
-            understandingStatus.classList.add("warning");
+            if (understandingContent) {
 
-            understandingContent.innerHTML = `
-                <p>
-                    Décrivez le jeu que vous voulez créer.
-                    Zentro analysera ensuite votre vision.
-                </p>
-            `;
+                understandingContent.innerHTML = `
+                    <p>
+                        Décrivez le jeu que vous voulez créer.
+                        Zentro analysera ensuite votre vision.
+                    </p>
+                `;
 
-            if (approvalPanel) {
-                approvalPanel.classList.remove("visible");
             }
 
             return;
@@ -545,6 +662,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const systems =
             detectSystems(prompt);
+
 
         currentSpec = {
 
@@ -556,16 +674,24 @@ document.addEventListener("DOMContentLoaded", () => {
             prompt,
 
             platform:
-                platform ? platform.value : "PC",
+                platform
+                    ? platform.value
+                    : "PC",
 
             dimension:
-                dimension ? dimension.value : "3D",
+                dimension
+                    ? dimension.value
+                    : "3D",
 
             priority:
-                priority ? priority.value : "Réalisme",
+                priority
+                    ? priority.value
+                    : "Réalisme",
 
             realism:
-                realism ? Number(realism.value) : 90,
+                realism
+                    ? Number(realism.value)
+                    : 90,
 
             systems,
 
@@ -580,10 +706,6 @@ document.addEventListener("DOMContentLoaded", () => {
             understandingStatus.textContent =
                 "Vision comprise ✓";
 
-            understandingStatus.classList.remove(
-                "warning"
-            );
-
         }
 
 
@@ -594,16 +716,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="understanding-grid">
 
                     <div>
-                        <strong>Vision détectée</strong>
+                        <strong>
+                            Vision détectée
+                        </strong>
+
                         <p>
-                            Zentro a analysé votre description
+                            Zentro a analysé ta description
                             et va construire le jeu autour
-                            de vos priorités.
+                            de tes priorités.
                         </p>
                     </div>
 
                     <div>
-                        <strong>Systèmes détectés</strong>
+                        <strong>
+                            Systèmes détectés
+                        </strong>
+
                         <p>
                             ${systems.length}
                             systèmes principaux
@@ -611,19 +739,24 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
 
                     <div>
-                        <strong>Niveau de réalisme</strong>
+                        <strong>
+                            Niveau de réalisme
+                        </strong>
+
                         <p>
                             ${currentSpec.realism}%
                         </p>
                     </div>
 
                 </div>
+
             `;
 
         }
 
 
         renderSpecification();
+
 
         if (approvalPanel) {
             approvalPanel.classList.add("visible");
@@ -662,17 +795,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderSpecification() {
 
-        if (!projectSpecification || !currentSpec) {
+        if (
+            !projectSpecification ||
+            !currentSpec
+        ) {
             return;
         }
 
         const systemHTML =
             currentSpec.systems
                 .map(system => `
+
                     <div class="spec">
-                        <span>${escapeHTML(system[0])}</span>
-                        <small>${escapeHTML(system[1])}</small>
+
+                        <span>
+                            ${escapeHTML(system[0])}
+                        </span>
+
+                        <small>
+                            ${escapeHTML(system[1])}
+                        </small>
+
                     </div>
+
                 `)
                 .join("");
 
@@ -720,14 +865,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class="specification-systems">
 
-                <h4>Systèmes prévus</h4>
+                <h4>
+                    Systèmes prévus
+                </h4>
 
                 <div class="specification-grid">
+
                     ${systemHTML}
+
                 </div>
 
             </div>
-
         `;
 
     }
@@ -739,24 +887,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (editButton) {
 
-        editButton.addEventListener("click", () => {
+        editButton.addEventListener(
+            "click",
+            () => {
 
-            if (approvalPanel) {
-                approvalPanel.classList.remove("visible");
-            }
+                approvalPanel?.classList.remove(
+                    "visible"
+                );
 
-            if (gamePrompt) {
+                gamePrompt?.focus();
 
-                gamePrompt.focus();
-
-                gamePrompt.scrollIntoView({
+                gamePrompt?.scrollIntoView({
                     behavior: "smooth",
                     block: "center"
                 });
 
             }
-
-        });
+        );
 
     }
 
@@ -778,7 +925,7 @@ document.addEventListener("DOMContentLoaded", () => {
             icon: "🌍",
             name: "World Builder",
             description:
-                "Construit le monde, les villes, routes, bâtiments et environnements."
+                "Construit le monde, les villes, routes et environnements."
         },
 
         {
@@ -792,54 +939,56 @@ document.addEventListener("DOMContentLoaded", () => {
             icon: "👤",
             name: "NPC AI",
             description:
-                "Crée les PNJ, comportements, routines et population dynamique."
+                "Crée les PNJ et leurs comportements."
         },
 
         {
             icon: "🎨",
             name: "Visual Engine",
             description:
-                "Gère les matériaux, éclairage, environnement et rendu."
+                "Gère les matériaux, éclairages et environnement."
         },
 
         {
             icon: "⚙️",
             name: "Systems Agent",
             description:
-                "Programme les missions, économies, gameplay et interactions."
+                "Programme missions, économie et gameplay."
         },
 
         {
             icon: "🎵",
             name: "Audio Agent",
             description:
-                "Crée et organise l'ambiance sonore et les effets."
+                "Organise les sons et l'ambiance."
         },
 
         {
             icon: "🧪",
             name: "QA Agent",
             description:
-                "Teste le jeu et recherche les bugs."
+                "Recherche les bugs et teste le jeu."
         },
 
         {
             icon: "🚀",
             name: "Optimizer",
             description:
-                "Optimise les performances et la stabilité."
+                "Optimise les performances."
         }
 
     ];
 
 
     // =====================================================
-    // AFFICHAGE DES AGENTS
+    // AGENTS UI
     // =====================================================
 
     function renderAgents() {
 
-        if (!agentCards) return;
+        if (!agentCards) {
+            return;
+        }
 
         agentCards.innerHTML =
             agents.map(agent => `
@@ -851,6 +1000,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
 
                     <div>
+
                         <h3>
                             ${escapeHTML(agent.name)}
                         </h3>
@@ -858,6 +1008,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <p>
                             ${escapeHTML(agent.description)}
                         </p>
+
                     </div>
 
                 </div>
@@ -873,59 +1024,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderPipeline() {
 
-        if (!agentPipeline) return;
+        if (!agentPipeline) {
+            return;
+        }
 
         agentPipeline.innerHTML =
-            agents.map((agent, index) => `
+            agents.map(
+                (agent, index) => `
 
-                <div
-                    class="agent-step"
-                    id="agent-step-${index}"
-                >
+                    <div
+                        class="agent-step"
+                        id="agent-step-${index}"
+                    >
 
-                    <div class="agent-icon">
-                        ${agent.icon}
+                        <div class="agent-icon">
+                            ${agent.icon}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(agent.name)}
+                            </strong>
+
+                            <span>
+                                En attente...
+                            </span>
+
+                        </div>
+
                     </div>
 
-                    <div>
-
-                        <strong>
-                            ${escapeHTML(agent.name)}
-                        </strong>
-
-                        <span>
-                            En attente...
-                        </span>
-
-                    </div>
-
-                </div>
-
-            `).join("");
+                `
+            ).join("");
 
     }
 
 
     // =====================================================
-    // GÉNÉRATION DU JEU
+    // GÉNÉRATION SIMULÉE
     // =====================================================
 
     async function generateGame() {
 
-        if (isBuilding || !currentSpec) {
+        if (
+            isBuilding ||
+            !currentSpec
+        ) {
             return;
         }
 
         isBuilding = true;
 
 
-        if (approvalPanel) {
-            approvalPanel.classList.remove("visible");
-        }
+        approvalPanel?.classList.remove(
+            "visible"
+        );
 
-        if (generationPanel) {
-            generationPanel.classList.add("visible");
-        }
+        generationPanel?.classList.add(
+            "visible"
+        );
+
 
         if (buildLog) {
             buildLog.innerHTML = "";
@@ -959,16 +1118,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "info"
         );
 
-        addLog(
-            "Analyse de la vision utilisateur...",
-            "info"
-        );
+
+        await sleep(500);
 
 
-        await sleep(700);
-
-
-        for (let i = 0; i < agents.length; i++) {
+        for (
+            let i = 0;
+            i < agents.length;
+            i++
+        ) {
 
             const agent =
                 agents[i];
@@ -978,16 +1136,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     `agent-step-${i}`
                 );
 
-            const percentage =
-                Math.round(
-                    (i / agents.length) * 100
-                );
-
-
-            if (buildProgress) {
-                buildProgress.style.width =
-                    `${percentage}%`;
-            }
 
             if (buildStatus) {
                 buildStatus.textContent =
@@ -995,9 +1143,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
+            if (buildProgress) {
+
+                buildProgress.style.width =
+                    `${Math.round(
+                        (i / agents.length) * 100
+                    )}%`;
+
+            }
+
+
             if (step) {
 
-                step.classList.add("working");
+                step.classList.add(
+                    "working"
+                );
 
                 const state =
                     step.querySelector("span");
@@ -1017,7 +1177,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             await sleep(
-                650 + Math.random() * 500
+                400 +
+                Math.random() * 350
             );
 
 
@@ -1050,54 +1211,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        // =================================================
-        // QA
-        // =================================================
-
-        if (buildStatus) {
-            buildStatus.textContent =
-                "TESTS & OPTIMISATION...";
-        }
-
         if (buildProgress) {
-            buildProgress.style.width =
-                "92%";
-        }
-
-
-        addLog(
-            "QA Agent : lancement des tests automatiques...",
-            "info"
-        );
-
-        await sleep(900);
-
-        addLog(
-            "QA Agent : analyse des systèmes terminée.",
-            "success"
-        );
-
-
-        addLog(
-            "Optimizer : optimisation du projet...",
-            "info"
-        );
-
-        await sleep(900);
-
-        addLog(
-            "Optimizer : optimisation terminée ✓",
-            "success"
-        );
-
-
-        // =================================================
-        // FINALISATION
-        // =================================================
-
-        if (buildProgress) {
-            buildProgress.style.width =
-                "100%";
+            buildProgress.style.width = "100%";
         }
 
         if (buildStatus) {
@@ -1107,19 +1222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         addLog(
-            "Compilation du prototype...",
-            "info"
-        );
-
-        await sleep(700);
-
-        addLog(
-            "Projet généré avec succès ✓",
-            "success"
-        );
-
-        addLog(
-            "Zentro Game Engine : BUILD COMPLETE.",
+            "Build terminé avec succès.",
             "success"
         );
 
@@ -1152,32 +1255,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const projects =
             getProjects();
 
-        const existingIndex =
-            projects.findIndex(
-                item => item.id === project.id
-            );
-
-        const savedProject = {
+        const saved = {
             ...project,
             status: "READY",
             updatedAt:
                 new Date().toISOString()
         };
 
-
-        if (existingIndex >= 0) {
-
-            projects[existingIndex] =
-                savedProject;
-
-        } else {
-
-            projects.unshift(
-                savedProject
-            );
-
-        }
-
+        projects.unshift(saved);
 
         saveProjects(
             projects.slice(0, 20)
@@ -1188,7 +1273,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderProjects() {
 
-        if (!projectsList) return;
+        if (!projectsList) {
+            return;
+        }
 
         const projects =
             getProjects();
@@ -1222,54 +1309,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         projectsList.innerHTML =
-            projects.map(project => `
+            projects.map(
+                project => `
 
-                <div class="project-card">
+                    <div class="project-card">
 
-                    <div class="project-card-main">
+                        <div class="project-card-main">
 
-                        <div class="project-icon">
-                            🎮
+                            <div class="project-icon">
+                                🎮
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    ${escapeHTML(
+                                        project.title
+                                    )}
+                                </h3>
+
+                                <p>
+                                    ${escapeHTML(
+                                        project.prompt
+                                            .substring(
+                                                0,
+                                                150
+                                            )
+                                    )}
+                                </p>
+
+                            </div>
+
                         </div>
 
-                        <div>
+                        <div class="project-card-meta">
 
-                            <h3>
-                                ${escapeHTML(project.title)}
-                            </h3>
-
-                            <p>
+                            <span>
                                 ${escapeHTML(
-                                    project.prompt.substring(
-                                        0,
-                                        150
-                                    )
-                                )}${project.prompt.length > 150 ? "..." : ""}
-                            </p>
+                                    project.platform
+                                )}
+                            </span>
+
+                            <span>
+                                ${project.realism}%
+                            </span>
+
+                            <span>
+                                READY
+                            </span>
 
                         </div>
 
                     </div>
 
-                    <div class="project-card-meta">
-
-                        <span>
-                            ${escapeHTML(project.platform)}
-                        </span>
-
-                        <span>
-                            ${project.realism}%
-                        </span>
-
-                        <span class="status-ready">
-                            READY
-                        </span>
-
-                    </div>
-
-                </div>
-
-            `).join("");
+                `
+            ).join("");
 
     }
 
@@ -1285,7 +1379,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "Monde & environnement",
             value: "95%",
             description:
-                "Densité du monde, végétation, bâtiments, routes et environnement."
+                "Densité du monde, bâtiments, routes et environnement."
         },
 
         {
@@ -1293,7 +1387,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "Physique véhicules",
             value: "92%",
             description:
-                "Suspension, accélération, freinage, adhérence et comportement."
+                "Suspension, accélération, freinage et adhérence."
         },
 
         {
@@ -1301,7 +1395,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "PNJ & population",
             value: "90%",
             description:
-                "Comportements, circulation, routines et interactions."
+                "Comportements et population dynamique."
         },
 
         {
@@ -1309,7 +1403,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "Météo & lumière",
             value: "96%",
             description:
-                "Cycle jour/nuit, météo dynamique, éclairage et atmosphère."
+                "Cycle jour/nuit, météo et éclairage."
         },
 
         {
@@ -1317,7 +1411,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "Audio immersif",
             value: "88%",
             description:
-                "Moteurs, pneus, environnement, ville et ambiance."
+                "Moteurs, environnement et ambiance."
         },
 
         {
@@ -1325,7 +1419,7 @@ document.addEventListener("DOMContentLoaded", () => {
             title: "Animation",
             value: "91%",
             description:
-                "Animations des personnages, véhicules et interactions."
+                "Animations des personnages et véhicules."
         }
 
     ];
@@ -1333,62 +1427,1556 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderRealismDashboard() {
 
-        if (!realismDashboard) return;
+        if (!realismDashboard) {
+            return;
+        }
 
         realismDashboard.innerHTML =
-            realismModules.map(module => `
+            realismModules.map(
+                module => `
 
-                <div class="realism-card">
+                    <div class="realism-card">
 
-                    <div class="realism-card-icon">
-                        ${module.icon}
-                    </div>
+                        <div class="realism-card-icon">
+                            ${module.icon}
+                        </div>
 
-                    <div class="realism-card-content">
-
-                        <div class="realism-card-header">
+                        <div>
 
                             <h3>
-                                ${escapeHTML(module.title)}
+                                ${escapeHTML(
+                                    module.title
+                                )}
                             </h3>
 
                             <strong>
                                 ${module.value}
                             </strong>
 
-                        </div>
-
-                        <p>
-                            ${escapeHTML(module.description)}
-                        </p>
-
-                        <div class="realism-bar">
-
-                            <div
-                                class="realism-bar-fill"
-                                style="width:${module.value}"
-                            ></div>
+                            <p>
+                                ${escapeHTML(
+                                    module.description
+                                )}
+                            </p>
 
                         </div>
 
                     </div>
 
-                </div>
-
-            `).join("");
+                `
+            ).join("");
 
     }
 
 
     // =====================================================
-    // CLAVIER
+    // =====================================================
+    // ZENTRO 3D GAME RUNTIME
+    // =====================================================
+    // =====================================================
+
+    let renderer = null;
+    let scene = null;
+    let camera = null;
+
+    let player = null;
+    let playerBody = null;
+
+    let gameStarted = false;
+    let gameInitialized = false;
+
+    let clock = null;
+
+    const keys = {};
+
+    let cameraYaw = 0;
+    let cameraPitch = 0.22;
+
+    let mouseDown = false;
+
+    let fpsFrames = 0;
+    let fpsLastTime = performance.now();
+
+
+    // -----------------------------------------------------
+    // 3D WORLD
+    // -----------------------------------------------------
+
+    function init3DGame() {
+
+        if (
+            gameInitialized ||
+            !gameCanvas ||
+            !gameViewport
+        ) {
+            return;
+        }
+
+
+        if (
+            typeof THREE === "undefined"
+        ) {
+
+            console.error(
+                "Three.js n'est pas chargé."
+            );
+
+            if (gameLoading) {
+                gameLoading.innerHTML = `
+                    <strong>
+                        Three.js indisponible
+                    </strong>
+
+                    <span>
+                        Impossible d'initialiser le moteur 3D.
+                    </span>
+                `;
+            }
+
+            return;
+        }
+
+
+        gameInitialized = true;
+
+
+        // -------------------------------------------------
+        // SCENE
+        // -------------------------------------------------
+
+        scene =
+            new THREE.Scene();
+
+        scene.background =
+            new THREE.Color(
+                0x8db7d9
+            );
+
+
+        // -------------------------------------------------
+        // CAMERA
+        // -------------------------------------------------
+
+        camera =
+            new THREE.PerspectiveCamera(
+                65,
+                1,
+                0.1,
+                1000
+            );
+
+        camera.position.set(
+            0,
+            5,
+            8
+        );
+
+
+        // -------------------------------------------------
+        // RENDERER
+        // -------------------------------------------------
+
+        renderer =
+            new THREE.WebGLRenderer({
+                canvas: gameCanvas,
+                antialias: true,
+                powerPreference:
+                    "high-performance"
+            });
+
+
+        renderer.setPixelRatio(
+            Math.min(
+                window.devicePixelRatio || 1,
+                1.5
+            )
+        );
+
+
+        renderer.shadowMap.enabled = true;
+
+        renderer.shadowMap.type =
+            THREE.PCFSoftShadowMap;
+
+
+        if (
+            "outputColorSpace" in renderer
+        ) {
+
+            renderer.outputColorSpace =
+                THREE.SRGBColorSpace;
+
+        }
+
+
+        if (
+            "toneMapping" in renderer
+        ) {
+
+            renderer.toneMapping =
+                THREE.ACESFilmicToneMapping;
+
+            renderer.toneMappingExposure =
+                1.1;
+
+        }
+
+
+        // -------------------------------------------------
+        // LIGHTS
+        // -------------------------------------------------
+
+        const hemi =
+            new THREE.HemisphereLight(
+                0xbfdcff,
+                0x52604d,
+                2.0
+            );
+
+        scene.add(hemi);
+
+
+        const sun =
+            new THREE.DirectionalLight(
+                0xffffff,
+                3.2
+            );
+
+        sun.position.set(
+            80,
+            100,
+            40
+        );
+
+        sun.castShadow = true;
+
+        sun.shadow.mapSize.width = 2048;
+        sun.shadow.mapSize.height = 2048;
+
+        sun.shadow.camera.left = -120;
+        sun.shadow.camera.right = 120;
+        sun.shadow.camera.top = 120;
+        sun.shadow.camera.bottom = -120;
+
+        scene.add(sun);
+
+
+        // -------------------------------------------------
+        // WORLD
+        // -------------------------------------------------
+
+        createGround();
+        createRoadNetwork();
+        createBuildings();
+        createTrees();
+        createStreetLights();
+        createPlayerCar();
+
+
+        // -------------------------------------------------
+        // RESIZE
+        // -------------------------------------------------
+
+        resize3D();
+
+
+        window.addEventListener(
+            "resize",
+            resize3D
+        );
+
+
+        // -------------------------------------------------
+        // INPUT
+        // -------------------------------------------------
+
+        window.addEventListener(
+            "keydown",
+            event => {
+
+                keys[
+                    event.key.toLowerCase()
+                ] = true;
+
+                if (
+                    event.key === " "
+                ) {
+                    keys.space = true;
+                }
+
+            }
+        );
+
+
+        window.addEventListener(
+            "keyup",
+            event => {
+
+                keys[
+                    event.key.toLowerCase()
+                ] = false;
+
+                if (
+                    event.key === " "
+                ) {
+                    keys.space = false;
+                }
+
+            }
+        );
+
+
+        gameViewport.addEventListener(
+            "mousedown",
+            event => {
+
+                if (!gameStarted) {
+                    return;
+                }
+
+                mouseDown = true;
+
+            }
+        );
+
+
+        window.addEventListener(
+            "mouseup",
+            () => {
+                mouseDown = false;
+            }
+        );
+
+
+        gameViewport.addEventListener(
+            "mousemove",
+            event => {
+
+                if (
+                    !gameStarted ||
+                    !mouseDown ||
+                    !player
+                ) {
+                    return;
+                }
+
+                cameraYaw -=
+                    event.movementX *
+                    0.003;
+
+                cameraPitch -=
+                    event.movementY *
+                    0.002;
+
+                cameraPitch =
+                    Math.max(
+                        -0.05,
+                        Math.min(
+                            0.65,
+                            cameraPitch
+                        )
+                    );
+
+            }
+        );
+
+
+        if (gameLoading) {
+            gameLoading.style.display =
+                "none";
+        }
+
+
+        if (gameHUD) {
+            gameHUD.style.display =
+                "block";
+        }
+
+
+        if (gameRuntimeStatus) {
+            gameRuntimeStatus.textContent =
+                "● READY";
+        }
+
+
+        clock =
+            new THREE.Clock();
+
+
+        animate3D();
+
+    }
+
+
+    // -----------------------------------------------------
+    // GROUND
+    // -----------------------------------------------------
+
+    function createGround() {
+
+        const geometry =
+            new THREE.PlaneGeometry(
+                500,
+                500
+            );
+
+        const material =
+            new THREE.MeshStandardMaterial({
+                color: 0x40553e,
+                roughness: 1
+            });
+
+        const ground =
+            new THREE.Mesh(
+                geometry,
+                material
+            );
+
+        ground.rotation.x =
+            -Math.PI / 2;
+
+        ground.receiveShadow = true;
+
+        scene.add(ground);
+
+    }
+
+
+    // -----------------------------------------------------
+    // ROAD
+    // -----------------------------------------------------
+
+    function createRoad(
+        x,
+        z,
+        width,
+        length,
+        rotation = 0
+    ) {
+
+        const geometry =
+            new THREE.BoxGeometry(
+                width,
+                0.08,
+                length
+            );
+
+        const material =
+            new THREE.MeshStandardMaterial({
+                color: 0x25282c,
+                roughness: 0.95
+            });
+
+        const road =
+            new THREE.Mesh(
+                geometry,
+                material
+            );
+
+        road.position.set(
+            x,
+            0.04,
+            z
+        );
+
+        road.rotation.y =
+            rotation;
+
+        road.receiveShadow = true;
+
+        scene.add(road);
+
+
+        // Ligne centrale
+
+        const lineMaterial =
+            new THREE.MeshBasicMaterial({
+                color: 0xf2f2d0
+            });
+
+
+        const lineGeometry =
+            new THREE.BoxGeometry(
+                0.12,
+                0.03,
+                length
+            );
+
+
+        const line =
+            new THREE.Mesh(
+                lineGeometry,
+                lineMaterial
+            );
+
+
+        line.position.set(
+            x,
+            0.10,
+            z
+        );
+
+        line.rotation.y =
+            rotation;
+
+        scene.add(line);
+
+    }
+
+
+    function createRoadNetwork() {
+
+        createRoad(
+            0,
+            0,
+            16,
+            420,
+            0
+        );
+
+        createRoad(
+            0,
+            0,
+            420,
+            16,
+            0
+        );
+
+
+        createRoad(
+            90,
+            0,
+            12,
+            420,
+            0
+        );
+
+
+        createRoad(
+            -90,
+            0,
+            12,
+            420,
+            0
+        );
+
+
+        createRoad(
+            0,
+            90,
+            420,
+            12,
+            0
+        );
+
+
+        createRoad(
+            0,
+            -90,
+            420,
+            12,
+            0
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // BUILDINGS
+    // -----------------------------------------------------
+
+    function createBuildings() {
+
+        const colors = [
+            0x69717a,
+            0x7c858e,
+            0x59636d,
+            0x8b8f91,
+            0x4e5963
+        ];
+
+
+        const positions = [
+
+            [-45, -45],
+            [-25, -50],
+            [25, -50],
+            [45, -45],
+
+            [-50, -20],
+            [50, -20],
+
+            [-50, 20],
+            [50, 20],
+
+            [-45, 45],
+            [-25, 50],
+            [25, 50],
+            [45, 45],
+
+            [-120, -80],
+            [120, -80],
+            [-120, 80],
+            [120, 80],
+
+            [-155, -30],
+            [155, 30]
+
+        ];
+
+
+        positions.forEach(
+            ([x, z], index) => {
+
+                const width =
+                    10 +
+                    Math.random() * 12;
+
+                const depth =
+                    10 +
+                    Math.random() * 12;
+
+                const height =
+                    8 +
+                    Math.random() * 28;
+
+
+                const geometry =
+                    new THREE.BoxGeometry(
+                        width,
+                        height,
+                        depth
+                    );
+
+
+                const material =
+                    new THREE.MeshStandardMaterial({
+                        color:
+                            colors[
+                                index %
+                                colors.length
+                            ],
+                        roughness: 0.8
+                    });
+
+
+                const building =
+                    new THREE.Mesh(
+                        geometry,
+                        material
+                    );
+
+
+                building.position.set(
+                    x,
+                    height / 2,
+                    z
+                );
+
+
+                building.castShadow = true;
+                building.receiveShadow = true;
+
+
+                scene.add(building);
+
+
+                // fenêtres
+
+                createWindows(
+                    building,
+                    width,
+                    height,
+                    depth
+                );
+
+            }
+        );
+
+    }
+
+
+    function createWindows(
+        building,
+        width,
+        height,
+        depth
+    ) {
+
+        const rows =
+            Math.max(
+                2,
+                Math.floor(
+                    height / 4
+                )
+            );
+
+        const cols =
+            Math.max(
+                2,
+                Math.floor(
+                    width / 3
+                )
+            );
+
+
+        const material =
+            new THREE.MeshBasicMaterial({
+                color: 0x8ed5ff
+            });
+
+
+        for (
+            let row = 0;
+            row < rows;
+            row++
+        ) {
+
+            for (
+                let col = 0;
+                col < cols;
+                col++
+            ) {
+
+                const windowGeometry =
+                    new THREE.BoxGeometry(
+                        0.8,
+                        1.2,
+                        0.08
+                    );
+
+
+                const windowMesh =
+                    new THREE.Mesh(
+                        windowGeometry,
+                        material
+                    );
+
+
+                const x =
+                    -width / 2 +
+                    1.7 +
+                    col * 3;
+
+
+                const y =
+                    2.2 +
+                    row * 3.5;
+
+
+                windowMesh.position.set(
+                    x,
+                    y,
+                    depth / 2 + 0.05
+                );
+
+
+                building.add(
+                    windowMesh
+                );
+
+            }
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // TREES
+    // -----------------------------------------------------
+
+    function createTrees() {
+
+        const positions = [
+
+            [-70, -70],
+            [-80, -50],
+            [-75, 45],
+            [-60, 70],
+
+            [70, -70],
+            [80, -50],
+            [75, 45],
+            [60, 70],
+
+            [-140, 0],
+            [140, 0],
+
+            [0, -140],
+            [0, 140]
+
+        ];
+
+
+        positions.forEach(
+            ([x, z]) => {
+
+                const group =
+                    new THREE.Group();
+
+
+                const trunk =
+                    new THREE.Mesh(
+                        new THREE.CylinderGeometry(
+                            0.5,
+                            0.7,
+                            5,
+                            8
+                        ),
+                        new THREE.MeshStandardMaterial({
+                            color: 0x60452e
+                        })
+                    );
+
+
+                trunk.position.y =
+                    2.5;
+
+                trunk.castShadow = true;
+
+                group.add(trunk);
+
+
+                const crown =
+                    new THREE.Mesh(
+                        new THREE.SphereGeometry(
+                            3.2,
+                            12,
+                            10
+                        ),
+                        new THREE.MeshStandardMaterial({
+                            color: 0x2e6735,
+                            roughness: 1
+                        })
+                    );
+
+
+                crown.position.y =
+                    6;
+
+                crown.castShadow = true;
+
+                group.add(crown);
+
+
+                group.position.set(
+                    x,
+                    0,
+                    z
+                );
+
+
+                scene.add(group);
+
+            }
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // STREET LIGHTS
+    // -----------------------------------------------------
+
+    function createStreetLights() {
+
+        const positions = [];
+
+        for (
+            let i = -180;
+            i <= 180;
+            i += 30
+        ) {
+
+            positions.push(
+                [7, i],
+                [-7, i],
+                [i, 7],
+                [i, -7]
+            );
+
+        }
+
+
+        positions.forEach(
+            ([x, z]) => {
+
+                const pole =
+                    new THREE.Mesh(
+                        new THREE.CylinderGeometry(
+                            0.12,
+                            0.15,
+                            5,
+                            8
+                        ),
+                        new THREE.MeshStandardMaterial({
+                            color: 0x33383d
+                        })
+                    );
+
+
+                pole.position.set(
+                    x,
+                    2.5,
+                    z
+                );
+
+
+                scene.add(pole);
+
+
+                const lamp =
+                    new THREE.Mesh(
+                        new THREE.SphereGeometry(
+                            0.3,
+                            8,
+                            8
+                        ),
+                        new THREE.MeshBasicMaterial({
+                            color: 0xffe7a3
+                        })
+                    );
+
+
+                lamp.position.set(
+                    x,
+                    5.1,
+                    z
+                );
+
+
+                scene.add(lamp);
+
+            }
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // PLAYER CAR
+    // -----------------------------------------------------
+
+    function createPlayerCar() {
+
+        player =
+            new THREE.Group();
+
+
+        playerBody =
+            new THREE.Group();
+
+
+        // carrosserie
+
+        const body =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    2.5,
+                    0.55,
+                    4.5
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x111217,
+                    metalness: 0.8,
+                    roughness: 0.25
+                })
+            );
+
+
+        body.position.y =
+            0.75;
+
+        body.castShadow = true;
+
+        playerBody.add(body);
+
+
+        // toit
+
+        const roof =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    1.9,
+                    0.5,
+                    2.0
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x15171c,
+                    metalness: 0.7,
+                    roughness: 0.2
+                })
+            );
+
+
+        roof.position.set(
+            0,
+            1.2,
+            -0.15
+        );
+
+
+        roof.castShadow = true;
+
+        playerBody.add(roof);
+
+
+        // vitres
+
+        const glass =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    1.75,
+                    0.38,
+                    1.5
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x152738,
+                    metalness: 0.2,
+                    roughness: 0.1,
+                    transparent: true,
+                    opacity: 0.85
+                })
+            );
+
+
+        glass.position.set(
+            0,
+            1.38,
+            -0.15
+        );
+
+
+        playerBody.add(glass);
+
+
+        // roues
+
+        const wheelGeometry =
+            new THREE.CylinderGeometry(
+                0.45,
+                0.45,
+                0.32,
+                20
+            );
+
+
+        const wheelMaterial =
+            new THREE.MeshStandardMaterial({
+                color: 0x080808,
+                roughness: 0.8
+            });
+
+
+        const wheelPositions = [
+
+            [-1.25, 0.48, -1.45],
+            [1.25, 0.48, -1.45],
+            [-1.25, 0.48, 1.45],
+            [1.25, 0.48, 1.45]
+
+        ];
+
+
+        wheelPositions.forEach(
+            position => {
+
+                const wheel =
+                    new THREE.Mesh(
+                        wheelGeometry,
+                        wheelMaterial
+                    );
+
+
+                wheel.rotation.z =
+                    Math.PI / 2;
+
+
+                wheel.position.set(
+                    ...position
+                );
+
+
+                wheel.castShadow = true;
+
+                playerBody.add(wheel);
+
+            }
+        );
+
+
+        // phares
+
+        const headlightMaterial =
+            new THREE.MeshBasicMaterial({
+                color: 0xffffff
+            });
+
+
+        const leftLight =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    0.45,
+                    0.18,
+                    0.08
+                ),
+                headlightMaterial
+            );
+
+
+        leftLight.position.set(
+            -0.75,
+            0.82,
+            -2.27
+        );
+
+
+        const rightLight =
+            leftLight.clone();
+
+
+        rightLight.position.x =
+            0.75;
+
+
+        playerBody.add(leftLight);
+        playerBody.add(rightLight);
+
+
+        player.add(playerBody);
+
+
+        player.position.set(
+            0,
+            0,
+            15
+        );
+
+
+        scene.add(player);
+
+    }
+
+
+    // -----------------------------------------------------
+    // GAME UPDATE
+    // -----------------------------------------------------
+
+    function updatePlayer(delta) {
+
+        if (
+            !player ||
+            !gameStarted
+        ) {
+            return;
+        }
+
+
+        let forward = 0;
+        let side = 0;
+
+
+        if (
+            keys.w ||
+            keys.z ||
+            keys.arrowup
+        ) {
+            forward += 1;
+        }
+
+
+        if (
+            keys.s ||
+            keys.arrowdown
+        ) {
+            forward -= 1;
+        }
+
+
+        if (
+            keys.a ||
+            keys.q ||
+            keys.arrowleft
+        ) {
+            side -= 1;
+        }
+
+
+        if (
+            keys.d ||
+            keys.arrowright
+        ) {
+            side += 1;
+        }
+
+
+        const speed =
+            keys.shift
+                ? 22
+                : 12;
+
+
+        if (
+            forward !== 0 ||
+            side !== 0
+        ) {
+
+            const direction =
+                new THREE.Vector3(
+                    side,
+                    0,
+                    -forward
+                );
+
+
+            direction.normalize();
+
+
+            direction.applyAxisAngle(
+                new THREE.Vector3(
+                    0,
+                    1,
+                    0
+                ),
+                cameraYaw
+            );
+
+
+            player.position.x +=
+                direction.x *
+                speed *
+                delta;
+
+
+            player.position.z +=
+                direction.z *
+                speed *
+                delta;
+
+
+            player.rotation.y =
+                Math.atan2(
+                    direction.x,
+                    direction.z
+                );
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // CAMERA
+    // -----------------------------------------------------
+
+    function updateCamera() {
+
+        if (!player || !camera) {
+            return;
+        }
+
+
+        const distance = 9;
+        const height = 4.2;
+
+
+        const offset =
+            new THREE.Vector3(
+                Math.sin(cameraYaw) * distance,
+                height +
+                    cameraPitch * 3,
+                Math.cos(cameraYaw) * distance
+            );
+
+
+        const target =
+            player.position.clone();
+
+
+        target.y += 1;
+
+
+        const desired =
+            target.clone()
+                .add(offset);
+
+
+        camera.position.lerp(
+            desired,
+            0.12
+        );
+
+
+        camera.lookAt(
+            target
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // ANIMATION
+    // -----------------------------------------------------
+
+    function animate3D() {
+
+        requestAnimationFrame(
+            animate3D
+        );
+
+
+        if (!renderer || !scene || !camera) {
+            return;
+        }
+
+
+        const delta =
+            Math.min(
+                clock
+                    ? clock.getDelta()
+                    : 0.016,
+                0.05
+            );
+
+
+        updatePlayer(delta);
+
+        updateCamera();
+
+
+        renderer.render(
+            scene,
+            camera
+        );
+
+
+        // FPS
+
+        fpsFrames++;
+
+        const now =
+            performance.now();
+
+
+        if (
+            now - fpsLastTime >= 1000
+        ) {
+
+            const fps =
+                fpsFrames;
+
+
+            if (hudFPS) {
+                hudFPS.textContent =
+                    `${fps} FPS`;
+            }
+
+
+            fpsFrames = 0;
+
+            fpsLastTime =
+                now;
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // RESIZE
+    // -----------------------------------------------------
+
+    function resize3D() {
+
+        if (
+            !renderer ||
+            !camera ||
+            !gameViewport
+        ) {
+            return;
+        }
+
+
+        const width =
+            gameViewport.clientWidth;
+
+        const height =
+            gameViewport.clientHeight;
+
+
+        if (
+            width <= 0 ||
+            height <= 0
+        ) {
+            return;
+        }
+
+
+        camera.aspect =
+            width / height;
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+            width,
+            height,
+            false
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // LANCER
+    // -----------------------------------------------------
+
+    if (launchGameButton) {
+
+        launchGameButton.addEventListener(
+            "click",
+            () => {
+
+                init3DGame();
+
+                gameStarted =
+                    !gameStarted;
+
+
+                if (gameStarted) {
+
+                    launchGameButton.textContent =
+                        "⏸ Pause";
+
+                    if (gameRuntimeStatus) {
+                        gameRuntimeStatus.textContent =
+                            "● RUNNING";
+                    }
+
+                } else {
+
+                    launchGameButton.textContent =
+                        "▶ Lancer";
+
+                    if (gameRuntimeStatus) {
+                        gameRuntimeStatus.textContent =
+                            "● PAUSED";
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // RESET
+    // =====================================================
+
+    if (resetGameButton) {
+
+        resetGameButton.addEventListener(
+            "click",
+            () => {
+
+                init3DGame();
+
+                gameStarted = false;
+
+                cameraYaw = 0;
+                cameraPitch = 0.22;
+
+
+                if (player) {
+
+                    player.position.set(
+                        0,
+                        0,
+                        15
+                    );
+
+                    player.rotation.set(
+                        0,
+                        0,
+                        0
+                    );
+
+                }
+
+
+                if (launchGameButton) {
+                    launchGameButton.textContent =
+                        "▶ Lancer";
+                }
+
+
+                if (gameRuntimeStatus) {
+                    gameRuntimeStatus.textContent =
+                        "● READY";
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // PLEIN ÉCRAN
+    // =====================================================
+
+    if (fullscreenGameButton) {
+
+        fullscreenGameButton.addEventListener(
+            "click",
+            async () => {
+
+                if (!gameViewport) {
+                    return;
+                }
+
+
+                try {
+
+                    if (
+                        !document.fullscreenElement
+                    ) {
+
+                        await gameViewport
+                            .requestFullscreen();
+
+                    } else {
+
+                        await document.exitFullscreen();
+
+                    }
+
+                } catch (error) {
+
+                    console.warn(
+                        "Fullscreen indisponible",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // CLAVIER GLOBAL
     // =====================================================
 
     document.addEventListener(
         "keydown",
         event => {
 
-            // Ctrl + K = créer rapidement
             if (
                 event.ctrlKey &&
                 event.key.toLowerCase() === "k"
@@ -1405,7 +2993,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            // Ctrl + Enter = analyser
             if (
                 event.ctrlKey &&
                 event.key === "Enter"
@@ -1414,7 +3001,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.preventDefault();
 
                 if (
-                    document.activeElement === gamePrompt
+                    document.activeElement ===
+                    gamePrompt
                 ) {
                     analyzePrompt();
                 }
