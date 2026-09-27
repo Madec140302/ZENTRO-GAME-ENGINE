@@ -58,9 +58,7 @@ function $(id) {
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-
     startBoot();
-
 });
 
 
@@ -117,11 +115,9 @@ function startBoot() {
                 initializeApplication();
 
             }, 400);
-
         }
 
     }, 250);
-
 }
 
 
@@ -143,7 +139,6 @@ function initializeApplication() {
     renderProjects();
 
     checkThreeJS();
-
 }
 
 
@@ -177,9 +172,7 @@ function checkThreeJS() {
         updateRuntimeStatus(
             "Three.js indisponible"
         );
-
     }
-
 }
 
 
@@ -204,7 +197,6 @@ function setupNavigation() {
         });
 
     });
-
 }
 
 
@@ -273,13 +265,10 @@ function navigateTo(page) {
     if (page === "preview") {
 
         setTimeout(() => {
-
             initializeGame3D();
-
         }, 100);
 
     }
-
 }
 
 
@@ -405,6 +394,10 @@ function updateRealismValue() {
 
 function setupCreateSystem() {
 
+    /* ========================================================
+       ANALYSER
+    ======================================================== */
+
     const analyze =
         $("analyzeButton");
 
@@ -417,6 +410,10 @@ function setupCreateSystem() {
 
     }
 
+
+    /* ========================================================
+       MODIFIER
+    ======================================================== */
 
     const edit =
         $("editButton");
@@ -434,23 +431,410 @@ function setupCreateSystem() {
                     panel.classList.add("hidden");
                 }
 
+
+                const generate =
+                    $("generateButton");
+
+                if (generate) {
+
+                    generate.disabled =
+                        true;
+
+                    generate.classList.remove(
+                        "ready"
+                    );
+
+                }
+
+
+                if (currentProject) {
+
+                    currentProject.validated =
+                        false;
+
+                }
+
             }
         );
 
     }
 
 
+    /* ========================================================
+       VALIDATION
+    ======================================================== */
+
+    setupValidationButton();
+
+
+    /* ========================================================
+       GÉNÉRATION
+    ======================================================== */
+
     const generate =
         $("generateButton");
 
     if (generate) {
 
+        /*
+         * Au démarrage, génération interdite
+         * tant que le projet n'est pas validé.
+         */
+
+        generate.disabled =
+            true;
+
+
+        generate.classList.remove(
+            "ready"
+        );
+
+
         generate.addEventListener(
             "click",
-            startGeneration
+            () => {
+
+                if (!currentProject) {
+
+                    showUnderstanding(
+                        "Analyse ton idée avant de générer le jeu."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    currentProject.validated !== true
+                ) {
+
+                    showUnderstanding(
+                        "Valide d'abord la compréhension de ton jeu."
+                    );
+
+                    return;
+
+                }
+
+
+                startGeneration();
+
+            }
         );
 
     }
+
+}
+
+
+/* ============================================================
+   BOUTON VALIDATION
+============================================================ */
+
+function setupValidationButton() {
+
+    const possibleIds = [
+
+        "validateButton",
+        "validationButton",
+        "approveButton",
+        "confirmButton",
+        "validateUnderstandingButton"
+
+    ];
+
+
+    let button = null;
+
+
+    /*
+     * Recherche par ID
+     */
+
+    for (const id of possibleIds) {
+
+        const element =
+            $(id);
+
+        if (element) {
+
+            button =
+                element;
+
+            break;
+
+        }
+
+    }
+
+
+    /*
+     * Recherche automatique
+     * parmi les boutons.
+     */
+
+    if (!button) {
+
+        const buttons =
+            document.querySelectorAll(
+                "button"
+            );
+
+
+        buttons.forEach(
+            element => {
+
+                const text =
+                    element.textContent
+                        .trim()
+                        .toLowerCase();
+
+
+                if (
+                    !button &&
+                    (
+                        text.includes("valider") ||
+                        text.includes("validation") ||
+                        text.includes("confirmer")
+                    )
+                ) {
+
+                    button =
+                        element;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * Aucun bouton trouvé
+     */
+
+    if (!button) {
+
+        console.warn(
+            "ZENTRO : bouton Valider introuvable."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Empêche un double branchement.
+     */
+
+    if (
+        button.dataset.zentroValidationBound === "true"
+    ) {
+
+        return;
+
+    }
+
+
+    button.dataset.zentroValidationBound =
+        "true";
+
+
+    button.type =
+        "button";
+
+
+    button.addEventListener(
+        "click",
+        validateUnderstanding
+    );
+
+
+    console.log(
+        "ZENTRO : bouton Valider détecté et connecté."
+    );
+
+}
+
+
+/* ============================================================
+   VALIDATION DE LA COMPRÉHENSION
+============================================================ */
+
+function validateUnderstanding() {
+
+    /*
+     * Il faut d'abord avoir une analyse.
+     */
+
+    if (!currentProject) {
+
+        showUnderstanding(
+            "Analyse d'abord ton idée avant de la valider."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Validation du projet.
+     */
+
+    currentProject.validated =
+        true;
+
+
+    currentProject.validatedAt =
+        new Date().toLocaleString(
+            "fr-FR"
+        );
+
+
+    /*
+     * Statut
+     */
+
+    currentProject.status =
+        "Compréhension validée";
+
+
+    /*
+     * Fermer le panneau d'approbation.
+     */
+
+    const approval =
+        $("approvalPanel");
+
+    if (approval) {
+
+        approval.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    /*
+     * Afficher le panneau de génération.
+     */
+
+    const generation =
+        $("generationPanel");
+
+    if (generation) {
+
+        generation.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    /*
+     * Activer le bouton Générer.
+     */
+
+    const generate =
+        $("generateButton");
+
+    if (generate) {
+
+        generate.disabled =
+            false;
+
+
+        generate.classList.add(
+            "ready"
+        );
+
+        generate.classList.remove(
+            "disabled"
+        );
+
+    }
+
+
+    /*
+     * Modifier le statut.
+     */
+
+    const status =
+        $("understandingStatus");
+
+    if (status) {
+
+        status.textContent =
+            "✓ Vision validée";
+
+    }
+
+
+    /*
+     * Confirmation visuelle.
+     */
+
+    const content =
+        $("understandingContent");
+
+    if (content) {
+
+        const oldConfirmation =
+            content.querySelector(
+                ".validation-success"
+            );
+
+
+        if (!oldConfirmation) {
+
+            const confirmation =
+                document.createElement(
+                    "div"
+                );
+
+
+            confirmation.className =
+                "validation-success";
+
+
+            confirmation.innerHTML = `
+                <strong>✓ Compréhension validée</strong>
+                <p>
+                    ZENTRO a enregistré ta vision.
+                    Le projet peut maintenant être généré.
+                </p>
+            `;
+
+
+            content.appendChild(
+                confirmation
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Sauvegarde.
+     */
+
+    saveProject(
+        currentProject
+    );
+
+
+    /*
+     * Notification console.
+     */
+
+    console.log(
+        "ZENTRO : compréhension validée."
+    );
 
 }
 
@@ -468,6 +852,7 @@ function analyzeGameIdea() {
         return;
     }
 
+
     const text =
         prompt.value.trim();
 
@@ -479,6 +864,42 @@ function analyzeGameIdea() {
         );
 
         return;
+
+    }
+
+
+    /*
+     * Nouvelle analyse =
+     * nouvelle validation nécessaire.
+     */
+
+    currentProject =
+        null;
+
+
+    const generate =
+        $("generateButton");
+
+    if (generate) {
+
+        generate.disabled =
+            true;
+
+        generate.classList.remove(
+            "ready"
+        );
+
+    }
+
+
+    const generation =
+        $("generationPanel");
+
+    if (generation) {
+
+        generation.classList.add(
+            "hidden"
+        );
 
     }
 
@@ -514,32 +935,55 @@ function analyzeGameIdea() {
         const data =
             analyzePrompt(text);
 
+
         currentProject = {
 
-            id: Date.now(),
+            id:
+                Date.now(),
 
-            prompt: text,
+            prompt:
+                text,
 
             title:
                 generateGameTitle(text),
 
             platform:
-                getValue("platform", "web"),
+                getValue(
+                    "platform",
+                    "web"
+                ),
 
             dimension:
-                getValue("dimension", "3d"),
+                getValue(
+                    "dimension",
+                    "3d"
+                ),
 
             priority:
-                getValue("priority", "realism"),
+                getValue(
+                    "priority",
+                    "realism"
+                ),
 
             realism:
-                getValue("realism", "90"),
+                getValue(
+                    "realism",
+                    "90"
+                ),
 
             analysis:
                 data,
 
+            validated:
+                false,
+
+            status:
+                "En attente de validation",
+
             createdAt:
-                new Date().toLocaleString("fr-FR")
+                new Date().toLocaleString(
+                    "fr-FR"
+                )
 
         };
 
@@ -576,6 +1020,14 @@ function analyzeGameIdea() {
         renderSpecification(
             currentProject
         );
+
+
+        /*
+         * On reconnecte le bouton au cas où
+         * l'interface a été reconstruite.
+         */
+
+        setupValidationButton();
 
 
     }, 700);
@@ -715,7 +1167,8 @@ function analyzePrompt(text) {
         summary:
             "ZENTRO a identifié la direction générale de ton jeu et va construire une base cohérente autour de ta vision.",
 
-        features: features,
+        features:
+            features,
 
         world:
             detectWorldType(lower),
@@ -746,6 +1199,7 @@ function detectWorldType(text) {
 
     }
 
+
     if (
         text.includes("campagne") ||
         text.includes("rural")
@@ -754,6 +1208,7 @@ function detectWorldType(text) {
         return "Environnement rural";
 
     }
+
 
     if (
         text.includes("île") ||
@@ -764,6 +1219,7 @@ function detectWorldType(text) {
         return "Île / environnement tropical";
 
     }
+
 
     return "Monde 3D personnalisé";
 
@@ -780,6 +1236,7 @@ function detectGameplay(text) {
 
     }
 
+
     if (
         text.includes("exploration")
     ) {
@@ -788,6 +1245,7 @@ function detectGameplay(text) {
 
     }
 
+
     if (
         text.includes("mission")
     ) {
@@ -795,6 +1253,7 @@ function detectGameplay(text) {
         return "Missions et progression";
 
     }
+
 
     return "Gameplay libre";
 
@@ -805,21 +1264,26 @@ function detectTechnical(text) {
 
     const result = [];
 
+
     result.push(
         "Moteur 3D temps réel"
     );
+
 
     result.push(
         "Système de caméra troisième personne"
     );
 
+
     result.push(
         "Éclairage dynamique"
     );
 
+
     result.push(
         "Architecture évolutive"
     );
+
 
     return result;
 
@@ -838,7 +1302,9 @@ function displayAnalysis(project) {
     if (status) {
 
         status.textContent =
-            "Vision comprise";
+            project.validated
+                ? "✓ Vision validée"
+                : "Vision comprise";
 
     }
 
@@ -871,7 +1337,6 @@ function displayAnalysis(project) {
 
 
             <div class="analysis-grid">
-
 
                 <div class="analysis-card">
 
@@ -929,7 +1394,6 @@ function displayAnalysis(project) {
                     </strong>
 
                 </div>
-
 
             </div>
 
@@ -995,7 +1459,9 @@ function renderSpecification(project) {
                 </span>
 
                 <strong>
-                    ${escapeHTML(project.dimension).toUpperCase()}
+                    ${escapeHTML(
+                        project.dimension
+                    ).toUpperCase()}
                 </strong>
 
             </div>
@@ -1008,7 +1474,9 @@ function renderSpecification(project) {
                 </span>
 
                 <strong>
-                    ${escapeHTML(project.priority)}
+                    ${escapeHTML(
+                        project.priority
+                    )}
                 </strong>
 
             </div>
@@ -1064,7 +1532,30 @@ function startGeneration() {
         return;
     }
 
+
+    if (!currentProject) {
+        return;
+    }
+
+
+    if (
+        currentProject.validated !== true
+    ) {
+
+        showUnderstanding(
+            "Valide d'abord la compréhension de ton jeu."
+        );
+
+        return;
+
+    }
+
+
     buildRunning = true;
+
+
+    currentProject.status =
+        "Génération en cours";
 
 
     const panel =
@@ -1153,7 +1644,9 @@ function startGeneration() {
                 Math.min(
                     100,
                     Math.round(
-                        step / agents.length * 100
+                        step /
+                        agents.length *
+                        100
                     )
                 );
 
@@ -1196,7 +1689,8 @@ function startGeneration() {
 
                 clearInterval(interval);
 
-                buildRunning = false;
+                buildRunning =
+                    false;
 
                 finishGeneration();
 
@@ -1225,7 +1719,10 @@ function addAgentToPipeline(
 
 
     const element =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     element.className =
         "pipeline-agent";
@@ -1294,7 +1791,10 @@ function addBuildLog(message) {
 
 
     const line =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     line.className =
         "log-line";
@@ -1328,6 +1828,7 @@ function finishGeneration() {
         currentProject.status =
             "Généré";
 
+
         saveProject(
             currentProject
         );
@@ -1345,6 +1846,7 @@ function finishGeneration() {
         navigateTo(
             "preview"
         );
+
 
         setTimeout(() => {
 
@@ -1471,7 +1973,9 @@ function renderProjects() {
                     </h3>
 
                     <p>
-                        ${escapeHTML(project.createdAt || "")}
+                        ${escapeHTML(
+                            project.createdAt || ""
+                        )}
                     </p>
 
                 </div>
@@ -1502,6 +2006,7 @@ function renderProjects() {
                         Number(
                             button.dataset.projectId
                         );
+
 
                     openProject(id);
 
@@ -1575,6 +2080,27 @@ function openProject(id) {
 
         specification.classList.remove(
             "hidden"
+        );
+
+    }
+
+
+    /*
+     * Si le projet avait déjà été validé,
+     * on réactive directement la génération.
+     */
+
+    const generate =
+        $("generateButton");
+
+    if (generate) {
+
+        generate.disabled =
+            project.validated !== true;
+
+        generate.classList.toggle(
+            "ready",
+            project.validated === true
         );
 
     }
@@ -1879,10 +2405,6 @@ function initializeGame3D() {
     }
 
 
-    /*
-     * Si le moteur existe déjà, on ne le recrée pas.
-     */
-
     if (renderer) {
 
         resizeRenderer();
@@ -1954,8 +2476,14 @@ function initializeGame3D() {
 
 
         renderer.setSize(
-            Math.max(viewport.clientWidth, 1),
-            Math.max(viewport.clientHeight, 1),
+            Math.max(
+                viewport.clientWidth,
+                1
+            ),
+            Math.max(
+                viewport.clientHeight,
+                1
+            ),
             false
         );
 
@@ -1983,6 +2511,7 @@ function initializeGame3D() {
         createTrees();
         createStreetLights();
 
+
         playerCar =
             createPlayerCar();
 
@@ -1994,6 +2523,7 @@ function initializeGame3D() {
 
         setupGameMouse();
         setupGameKeyboard();
+
 
         window.addEventListener(
             "resize",
@@ -2082,6 +2612,7 @@ function createLighting() {
     sun.shadow.mapSize.width =
         2048;
 
+
     sun.shadow.mapSize.height =
         2048;
 
@@ -2089,11 +2620,14 @@ function createLighting() {
     sun.shadow.camera.left =
         -150;
 
+
     sun.shadow.camera.right =
         150;
 
+
     sun.shadow.camera.top =
         150;
+
 
     sun.shadow.camera.bottom =
         -150;
@@ -2255,10 +2789,6 @@ function createRoad(
         road
     );
 
-
-    /*
-     * Marquage central.
-     */
 
     if (width > depth) {
 
@@ -2496,7 +3026,9 @@ function createWindows(
             if (
                 (row + col) % 3 === 0
             ) {
+
                 continue;
+
             }
 
 
@@ -2520,7 +3052,10 @@ function createWindows(
                 1.7 +
                 col * (
                     width /
-                    Math.max(columns, 1)
+                    Math.max(
+                        columns,
+                        1
+                    )
                 );
 
 
@@ -2780,10 +3315,6 @@ function createPlayerCar() {
     );
 
 
-    /*
-     * Corps
-     */
-
     const bodyGeometry =
         new THREE.BoxGeometry(
             2.4,
@@ -2826,10 +3357,6 @@ function createPlayerCar() {
         body
     );
 
-
-    /*
-     * Habitacle
-     */
 
     const cabinGeometry =
         new THREE.BoxGeometry(
@@ -2878,10 +3405,6 @@ function createPlayerCar() {
     );
 
 
-    /*
-     * Roues
-     */
-
     const wheelPositions = [
 
         [-1.25, 0.05, -1.45],
@@ -2918,10 +3441,6 @@ function createPlayerCar() {
         }
     );
 
-
-    /*
-     * Phares
-     */
 
     const headlightMaterial =
         new THREE.MeshBasicMaterial({
@@ -3077,10 +3596,13 @@ function setupGameMouse() {
         "mousedown",
         event => {
 
-            mouseDown = true;
+            mouseDown =
+                true;
+
 
             lastMouseX =
                 event.clientX;
+
 
             lastMouseY =
                 event.clientY;
@@ -3093,7 +3615,8 @@ function setupGameMouse() {
         "mouseup",
         () => {
 
-            mouseDown = false;
+            mouseDown =
+                false;
 
         }
     );
@@ -3120,6 +3643,7 @@ function setupGameMouse() {
 
             lastMouseX =
                 event.clientX;
+
 
             lastMouseY =
                 event.clientY;
@@ -3294,7 +3818,10 @@ function updatePlayer(delta) {
     }
 
 
-    if (!forward && !backward) {
+    if (
+        !forward &&
+        !backward
+    ) {
 
         carSpeed *=
             Math.pow(
@@ -3315,11 +3842,10 @@ function updatePlayer(delta) {
         );
 
 
-    /*
-     * Direction
-     */
-
-    if (Math.abs(carSpeed) > 0.15) {
+    if (
+        Math.abs(carSpeed) >
+        0.15
+    ) {
 
         const direction =
             carSpeed >= 0
@@ -3345,10 +3871,6 @@ function updatePlayer(delta) {
     }
 
 
-    /*
-     * Déplacement
-     */
-
     const direction =
         new THREE.Vector3(
             Math.sin(carRotation),
@@ -3362,10 +3884,6 @@ function updatePlayer(delta) {
         carSpeed * delta
     );
 
-
-    /*
-     * Limites de la carte
-     */
 
     playerCar.position.x =
         Math.max(
@@ -3387,10 +3905,6 @@ function updatePlayer(delta) {
         );
 
 
-    /*
-     * Rotation des roues
-     */
-
     carWheels.forEach(
         wheel => {
 
@@ -3411,8 +3925,13 @@ function updatePlayer(delta) {
 
 function updateCamera() {
 
-    if (!playerCar || !camera) {
+    if (
+        !playerCar ||
+        !camera
+    ) {
+
         return;
+
     }
 
 
@@ -3506,6 +4025,7 @@ function launchGame() {
     gameStarted =
         true;
 
+
     gamePaused =
         false;
 
@@ -3517,6 +4037,7 @@ function launchGame() {
 
     const button =
         $("launchGameButton");
+
 
     if (button) {
 
@@ -3560,11 +4081,14 @@ function resetGame() {
     carRotation =
         0;
 
+
     carSpeed =
         0;
 
+
     cameraYaw =
         0;
+
 
     cameraPitch =
         0.35;
@@ -3585,6 +4109,7 @@ function resetGame() {
 
     const button =
         $("launchGameButton");
+
 
     if (button) {
 
@@ -3731,6 +4256,7 @@ function updateFPS() {
 
         fpsFrames =
             0;
+
 
         fpsLastTime =
             now;
@@ -3904,14 +4430,17 @@ document.addEventListener(
 
             event.preventDefault();
 
+
             const prompt =
                 $("gamePrompt");
+
 
             if (prompt) {
 
                 navigateTo(
                     "create"
                 );
+
 
                 prompt.focus();
 
@@ -3945,6 +4474,7 @@ console.log(
     "%cZENTRO GAME ENGINE",
     "font-size:24px;font-weight:bold"
 );
+
 
 console.log(
     "ZENTRO Runtime initialisé."
